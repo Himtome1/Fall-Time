@@ -7,7 +7,7 @@ w = 600
 h = 400
 projectile_initial_x = 25
 projectile_initial_y = 393
-scale_factor = 25
+
 
 # Window size
 window = tk.Tk()
@@ -28,15 +28,21 @@ def calc():
 
     time_1 = vy / 9.8  # time until max height
 
-    max_height = (vy * time_1) + (0.5 * (-9.8 * time_1 * time_1))
+    max_height = (vy * time_1) + (0.5 * (-9.8 * time_1 * time_1)) + height
 
-    time_2 = m.sqrt((2 * (max_height+height)) / 9.8)  # time from max height to ground
+    time_2 = m.sqrt((2 * max_height) / 9.8)  # time from max height to ground
 
     time_total = time_1 + time_2
     dx = vx * time_total  # distance travelled in x direction
 
     result_label["text"] = f"Time: {round(time_total, 2)} s \n Distance: {round(dx, 2)} m "  # updates result label
-    return vx, vy, height, time_total, max_height, time_1
+
+    # dynamic scaling adjusts scale factor as a result of the greater of max height or distance travelled
+    if max_height > (h/w) * dx:
+        scale_factor = 25 * (15.7/max_height)
+    else:
+        scale_factor = 25 * (22/dx)
+    return vx, vy, height, time_total, max_height, time_1, scale_factor
 
 
 def y_position(time, vy, height):  # y-position as a function of time, vy and height are constants from by GUI field
@@ -52,6 +58,7 @@ def graphic_motion():
     vy = data[1]
     height = data[2]
     time = data[3]
+    scale_factor = data[6]
     color = 'B6D7A8'
     color_end = 'D7A8A8'
     positions = []  # initializing position list
@@ -65,38 +72,16 @@ def graphic_motion():
     start_time = t.time()
     ypos = 1
     while ypos >= 0:
+
         n = n + 1
         current_time = t.time() - start_time
         ypos = y_position(current_time, vy, height)
         positions.append(y_position(current_time, vy, height), )
-        # positions.append(round(y_position(i, vy, height), ))
-        # print(positions[n])
-
         circle_coords = canvas.coords(my_circle)
         x_coord = circle_coords[0]
         y_coord = circle_coords[1]
-
-        print(current_time)
-
         canvas.update()
-
-        if x_coord >= 600:
-            width_increased = w
-            width_increased = width_increased*2
-            canvas.config(width=width_increased)
-
-            if x_coord >= 1200:
-                width_increased = width_increased * 2
-                canvas.config(width=width_increased)
-        else:
-            canvas.config(width=w)
-
-        if y_coord > 0:
-            canvas.moveto(my_circle, projectile_initial_x + vx * current_time * scale_factor, projectile_initial_y - positions[n] * scale_factor)
-
-        if y_coord <= 0:
-            canvas.moveto(my_circle, projectile_initial_x + vx * current_time * scale_factor, projectile_initial_y - positions[n] * scale_factor + 400)
-
+        canvas.moveto(my_circle, projectile_initial_x + vx * current_time * scale_factor, projectile_initial_y - positions[n] * scale_factor)
         t.sleep(0.01)
 
     circle_coords = canvas.coords(my_circle)
