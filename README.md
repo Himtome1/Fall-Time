@@ -2,7 +2,7 @@
 A fun 2-D projectile motion simulator made with Tkinter
 
 
-![](Quick.gif)
+![](Arc.gif)
 
 
 The program creates a visual representation of a 2-D projectile by taking in 3 parameters: Height, Speed, Angle and then applies them to basic kinematics formulas.
@@ -10,7 +10,7 @@ The program creates a visual representation of a 2-D projectile by taking in 3 p
 Height refers to the starting point of the projectile, while speed and angle are used to produce the velocity vector of the projectile. 
 
 
-![](https://github.com/fall-time/Arc.gif)
+![](Quick.gif)
 
 
 ## GUI
