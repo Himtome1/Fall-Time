@@ -5,8 +5,9 @@ import time as t
 
 w = 600
 h = 400
-x = w//2
-y = w//2
+projectile_initial_x = 25
+projectile_initial_y = 393
+scale_factor = 25
 
 # Window size
 window = tk.Tk()
@@ -58,7 +59,7 @@ def graphic_motion():
     n = -1  # index loop counter
 
     canvas.itemconfig(my_circle, fill=f"#{color}")
-    canvas.moveto(my_circle, 25, y-height*25+93)
+    canvas.moveto(my_circle, projectile_initial_x, projectile_initial_y-height*scale_factor)
     canvas.update()
     t.sleep(1)
     start_time = t.time()
@@ -91,15 +92,15 @@ def graphic_motion():
             canvas.config(width=w)
 
         if y_coord > 0:
-            canvas.moveto(my_circle, 25 + vx * current_time * 25, y - positions[n] * 25 + 93)
+            canvas.moveto(my_circle, projectile_initial_x + vx * current_time * scale_factor, projectile_initial_y - positions[n] * scale_factor)
 
         if y_coord <= 0:
-            canvas.moveto(my_circle, 25 + vx * current_time * 25, y - positions[n] * 25 + 400)
+            canvas.moveto(my_circle, projectile_initial_x + vx * current_time * scale_factor, projectile_initial_y - positions[n] * scale_factor + 400)
 
         t.sleep(0.01)
 
     circle_coords = canvas.coords(my_circle)
-    canvas.moveto(my_circle, circle_coords[0], y+93)
+    canvas.moveto(my_circle, circle_coords[0], projectile_initial_y)
     canvas.itemconfig(my_circle, fill=f"#{color_end}")
 
     return circle_coords
@@ -109,12 +110,7 @@ def action():
     graphic_motion()
 
 
-
-
-
-
-my_circle = canvas.create_oval(x, y, x+10, y+10, fill="#B6D7A8")
-
+my_circle = canvas.create_oval(projectile_initial_x, projectile_initial_y, projectile_initial_x+10, projectile_initial_y+10, fill="#B6D7A8")
 
 height_label = tk.Label(master=entry1, text="Enter height in metres:")
 height_entry = tk.Entry(master=entry1, width=10)
